@@ -1,0 +1,57 @@
+protocol MusicTrack {
+    func accept(visitor: MusicTrackVisitor)
+}
+
+class Song: MusicTrack {
+    var artist: String
+    var title: String
+    init(artist: String, title: String) {
+        self.artist = artist
+        self.title = title
+    }
+    func accept(visitor: MusicTrackVisitor) {
+        visitor.visit(track: self)
+    }
+}
+
+class Podcast: MusicTrack {
+    var title: String
+    var episode: String
+    init(title: String, episode: String) {
+        self.title = title
+        self.episode = episode
+    }
+    func accept(visitor: MusicTrackVisitor) {
+        visitor.visit(track: self)
+    }
+}
+
+protocol MusicTrackVisitor {
+    func visit(track: Song)
+    func visit(track: Podcast)
+}
+
+class MusicLibraryVisitor: MusicTrackVisitor {
+    var songs = [String]()
+    var podcasts = [String]()
+    func visit(track: Song) {
+        songs.append(track.artist + " - " + track.title)
+    }
+    func visit(track: Podcast) {
+        podcasts.append(track.title + " - " + track.episode)
+    }
+}
+
+let song1 = Song(artist: "Jesper Kyd", title: "Venice Rooftops")
+let song2 = Song(artist: "Lenny Kravitz", title: "Fly Away")
+let podcast1 = Podcast(title: "Hello", episode: "Cloud")
+let podcast2 = Podcast(title: "StartUp", episode: "1")
+
+let libraryVisitor = MusicLibraryVisitor()
+song1.accept(visitor: libraryVisitor)
+song2.accept(visitor: libraryVisitor)
+podcast1.accept(visitor: libraryVisitor)
+podcast2.accept(visitor: libraryVisitor)
+
+print(libraryVisitor.songs)
+print(libraryVisitor.podcasts)
